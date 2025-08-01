@@ -11,7 +11,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import de.markusfisch.android.shadernerdeditor.R;
 import de.markusfisch.android.shadernerdeditor.adapter.ShaderSpinnerAdapter;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.database.Database;
 import de.markusfisch.android.shadernerdeditor.preference.Preferences;
 
@@ -51,7 +51,7 @@ public class ShaderListPreferenceDialogFragment
 		// will never be used.
 
 		final String key = getPreference().getKey();
-		Cursor cursor = ShaderEditorApp.db.getShaders();
+		Cursor cursor = ShaderNerdEditorApp.db.getShaders();
 		if (Preferences.DEFAULT_NEW_SHADER.equals(key)) {
 			cursor = addEmptyItem(cursor);
 		}
@@ -62,10 +62,10 @@ public class ShaderListPreferenceDialogFragment
 				0,
 				(dialog, which) -> {
 					if (Preferences.WALLPAPER_SHADER.equals(key)) {
-						ShaderEditorApp.preferences.setWallpaperShader(
+						ShaderNerdEditorApp.preferences.setWallpaperShader(
 								adapter.getItemId(which));
 					} else {
-						ShaderEditorApp.preferences.setDefaultNewShader(
+						ShaderNerdEditorApp.preferences.setDefaultNewShader(
 								adapter.getItemId(which));
 					}
 

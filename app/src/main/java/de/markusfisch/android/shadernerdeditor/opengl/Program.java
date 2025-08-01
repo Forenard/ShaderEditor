@@ -7,6 +7,8 @@ import androidx.annotation.NonNull;
 import java.util.Collections;
 import java.util.List;
 
+import de.markusfisch.android.shadernerdeditor.opengl.ShaderError;
+
 class Program {
 	@NonNull
 	private static List<ShaderError> infoLog = Collections.emptyList();

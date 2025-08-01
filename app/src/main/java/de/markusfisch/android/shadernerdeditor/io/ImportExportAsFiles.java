@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.Locale;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.database.Database;
 
 public class ImportExportAsFiles {
@@ -39,7 +39,7 @@ public class ImportExportAsFiles {
 						shaderName = shaderName.substring(0, shaderName.length()
 								- SHADER_FILE_EXTENSION.length());
 						String fragmentShader = readFile(file);
-						ShaderEditorApp.db.insertShader(context, fragmentShader, shaderName);
+						ShaderNerdEditorApp.db.insertShader(context, fragmentShader, shaderName);
 						successCount++;
 					} catch (IOException e) {
 						failCount++;
@@ -71,7 +71,7 @@ public class ImportExportAsFiles {
 		try {
 			File exportDirectory = getImportExportDirectory(context, true);
 
-			Cursor shadersCursor = ShaderEditorApp.db.getShaders();
+			Cursor shadersCursor = ShaderNerdEditorApp.db.getShaders();
 			if (Database.closeIfEmpty(shadersCursor)) {
 				throw new IOException(context.getString(R.string.no_shaders_found));
 			}
@@ -81,7 +81,7 @@ public class ImportExportAsFiles {
 
 			do {
 				long shaderId = Database.getLong(shadersCursor, Database.SHADERS_ID);
-				Cursor shaderCursor = ShaderEditorApp.db.getShader(shaderId);
+				Cursor shaderCursor = ShaderNerdEditorApp.db.getShader(shaderId);
 				if (Database.closeIfEmpty(shaderCursor)) {
 					continue;
 				}

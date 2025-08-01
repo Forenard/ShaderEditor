@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.graphics.BitmapEditor;
 import de.markusfisch.android.shadernerdeditor.widget.CubeMapView;
 
@@ -116,7 +116,7 @@ public class SamplerCubePropertiesFragment extends AbstractSamplerPropertiesFrag
 			}
 		}
 
-		return ShaderEditorApp.db.insertTexture(name, mapBitmap) < 1
+		return ShaderNerdEditorApp.db.insertTexture(name, mapBitmap) < 1
 				? R.string.name_already_taken
 				: 0;
 	}

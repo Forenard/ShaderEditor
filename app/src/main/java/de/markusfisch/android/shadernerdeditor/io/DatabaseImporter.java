@@ -9,7 +9,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 
 public class DatabaseImporter {
 	public static String importDatabase(Context context, Uri uri) {
@@ -49,7 +49,7 @@ public class DatabaseImporter {
 				// Ignore, can't do anything about it.
 			}
 		}
-		String error = ShaderEditorApp.db.importDatabase(context, fileName);
+		String error = ShaderNerdEditorApp.db.importDatabase(context, fileName);
 		context.deleteFile(fileName);
 		return error == null
 				? context.getString(R.string.successfully_imported)

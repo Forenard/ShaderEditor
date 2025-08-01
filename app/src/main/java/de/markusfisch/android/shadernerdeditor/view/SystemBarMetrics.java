@@ -12,7 +12,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 
 public class SystemBarMetrics {
 	public static void initSystemBars(AppCompatActivity activity) {
@@ -26,7 +26,7 @@ public class SystemBarMetrics {
 				(mainLayout = activity.findViewById(R.id.main_layout)) != null &&
 				setSystemBarColor(
 						activity.getWindow(),
-						ShaderEditorApp.preferences.getSystemBarColor(),
+						ShaderNerdEditorApp.preferences.getSystemBarColor(),
 						true)) {
 			setWindowInsets(mainLayout, insets);
 		}

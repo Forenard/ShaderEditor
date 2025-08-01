@@ -12,7 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.view.SystemBarMetrics;
 
 public abstract class AbstractSubsequentActivity extends AppCompatActivity {
@@ -42,7 +42,7 @@ public abstract class AbstractSubsequentActivity extends AppCompatActivity {
 	public static void initSystemBars(AppCompatActivity activity) {
 		SystemBarMetrics.setSystemBarColor(
 				activity.getWindow(),
-				ShaderEditorApp.preferences.getSystemBarColor(),
+				ShaderNerdEditorApp.preferences.getSystemBarColor(),
 				false);
 	}
 

@@ -1,16 +1,14 @@
 #version 300 es
-
-#ifdef GL_FRAGMENT_PRECISION_HIGH
 precision highp float;
-#else
-precision mediump float;
-#endif
-
-out vec4 fragColor;
+precision highp int;
+precision highp uint;
+out vec4 outColor;
+uniform float time;
 uniform vec2 resolution;
 
-void main(void) {
-	vec2 uv = gl_FragCoord.xy / resolution.xy;
-
-	fragColor = vec4(uv, 1.0, 1.0);
+void main() {
+	vec2 fc=gl_FragCoord.xy,res=resolution,asp=res/min(res.x,res.y),;
+	vec2 uv=fc/res,suv=(uv*2.-1.)*asp;
+	vec3 c=vec3(step(length(suv),.5));
+	outColor = vec4(c,1);
 }

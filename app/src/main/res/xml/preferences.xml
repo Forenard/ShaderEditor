@@ -26,7 +26,7 @@
 			android:title="@string/run_mode"
 			android:entries="@array/run_mode_names"
 			android:entryValues="@array/run_mode_values"
-			android:defaultValue="1"/>
+			android:defaultValue="2"/>
 		<ListPreference
 			android:key="update_delay"
 			android:title="@string/update_delay"

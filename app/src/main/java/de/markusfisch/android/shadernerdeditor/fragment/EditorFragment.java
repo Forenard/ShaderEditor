@@ -15,7 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.opengl.ShaderError;
 import de.markusfisch.android.shadernerdeditor.preference.Preferences;
 import de.markusfisch.android.shadernerdeditor.view.SoftKeyboard;
@@ -42,8 +42,8 @@ public class EditorFragment extends Fragment {
 
 		editorContainer = view.findViewById(R.id.editor_container);
 		shaderEditor = view.findViewById(R.id.editor);
-		setShowLineNumbers(ShaderEditorApp.preferences.showLineNumbers());
-		undoRedo = new UndoRedo(shaderEditor, ShaderEditorApp.editHistory);
+		setShowLineNumbers(ShaderNerdEditorApp.preferences.showLineNumbers());
+		undoRedo = new UndoRedo(shaderEditor, ShaderNerdEditorApp.editHistory);
 
 		Activity activity = requireActivity();
 		if (activity instanceof ShaderEditor.OnTextChangedListener) {
@@ -165,7 +165,7 @@ public class EditorFragment extends Fragment {
 	}
 
 	private void updateToPreferences() {
-		Preferences preferences = ShaderEditorApp.preferences;
+		Preferences preferences = ShaderNerdEditorApp.preferences;
 		shaderEditor.setUpdateDelay(preferences.getUpdateDelay());
 		shaderEditor.setTextSize(
 				TypedValue.COMPLEX_UNIT_SP,

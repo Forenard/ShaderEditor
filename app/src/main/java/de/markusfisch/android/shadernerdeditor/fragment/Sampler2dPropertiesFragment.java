@@ -14,7 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.graphics.BitmapEditor;
 
 public class Sampler2dPropertiesFragment extends AbstractSamplerPropertiesFragment {
@@ -107,7 +107,7 @@ public class Sampler2dPropertiesFragment extends AbstractSamplerPropertiesFragme
 			return R.string.illegal_rectangle;
 		}
 
-		if (ShaderEditorApp.db.insertTexture(
+		if (ShaderNerdEditorApp.db.insertTexture(
 				name,
 				Bitmap.createScaledBitmap(
 						bitmap,

@@ -38,7 +38,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.fragment.AbstractSamplerPropertiesFragment;
 import de.markusfisch.android.shadernerdeditor.hardware.AccelerometerListener;
 import de.markusfisch.android.shadernerdeditor.hardware.CameraListener;
@@ -516,7 +516,7 @@ public class ShaderRenderer implements GLSurfaceView.Renderer {
 		}
 		if (powerConnectedLoc > -1) {
 			GLES30.glUniform1i(powerConnectedLoc,
-					ShaderEditorApp.preferences.isPowerConnected() ? 1 : 0);
+					ShaderNerdEditorApp.preferences.isPowerConnected() ? 1 : 0);
 		}
 		if (dateTimeLoc > -1 || daytimeLoc > -1) {
 			if (now - lastDateUpdate > DATE_UPDATE_INTERVAL) {
@@ -1203,7 +1203,7 @@ public class ShaderRenderer implements GLSurfaceView.Renderer {
 				continue;
 			}
 
-			Bitmap bitmap = ShaderEditorApp.db.getTextureBitmap(name);
+			Bitmap bitmap = ShaderNerdEditorApp.db.getTextureBitmap(name);
 			if (bitmap == null) {
 				continue;
 			}

@@ -31,7 +31,7 @@
 	</queries>
 	<application
 		tools:ignore="UnusedAttribute"
-		android:name=".app.ShaderEditorApp"
+		android:name=".app.ShaderNerdEditorApp"
 		android:allowBackup="true"
 		android:fullBackupContent="@xml/backup_rules"
 		android:dataExtractionRules="@xml/extraction_rules"

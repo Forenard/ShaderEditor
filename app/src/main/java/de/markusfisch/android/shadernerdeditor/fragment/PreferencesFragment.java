@@ -25,7 +25,7 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.database.Database;
 import de.markusfisch.android.shadernerdeditor.io.DatabaseExporter;
 import de.markusfisch.android.shadernerdeditor.io.DatabaseImporter;
@@ -123,13 +123,13 @@ public class PreferencesFragment
 			return;
 		}
 
-		ShaderEditorApp.preferences.update(getContext());
+		ShaderNerdEditorApp.preferences.update(getContext());
 		setSummary(preference);
 
 		if (Preferences.SAVE_BATTERY.equals(key) &&
-				ShaderEditorApp.preferences.isBatteryLow()) {
+				ShaderNerdEditorApp.preferences.isBatteryLow()) {
 			BatteryLevelReceiver.setLowPowerMode(
-					ShaderEditorApp.preferences.saveBattery());
+					ShaderNerdEditorApp.preferences.saveBattery());
 		}
 	}
 
@@ -159,8 +159,8 @@ public class PreferencesFragment
 	private void setSummary(Preference preference) {
 		if (preference instanceof ShaderListPreference) {
 			long id = Preferences.WALLPAPER_SHADER.equals(preference.getKey())
-					? ShaderEditorApp.preferences.getWallpaperShader()
-					: ShaderEditorApp.preferences.getDefaultNewShader();
+					? ShaderNerdEditorApp.preferences.getWallpaperShader()
+					: ShaderNerdEditorApp.preferences.getDefaultNewShader();
 			preference.setSummary(getShaderSummary(id));
 		} else if (preference instanceof ListPreference) {
 			preference.setSummary(((ListPreference) preference).getEntry());
@@ -170,7 +170,7 @@ public class PreferencesFragment
 	}
 
 	private String getShaderSummary(long id) {
-		Cursor cursor = ShaderEditorApp.db.getShader(id);
+		Cursor cursor = ShaderNerdEditorApp.db.getShader(id);
 
 		if (Database.closeIfEmpty(cursor)) {
 			return getString(R.string.no_shader_selected);

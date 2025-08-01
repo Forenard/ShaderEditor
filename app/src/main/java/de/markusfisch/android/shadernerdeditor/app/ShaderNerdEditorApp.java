@@ -12,14 +12,12 @@ import de.markusfisch.android.shadernerdeditor.preference.Preferences;
 import de.markusfisch.android.shadernerdeditor.receiver.BatteryLevelReceiver;
 import de.markusfisch.android.shadernerdeditor.view.UndoRedo;
 
-public class ShaderEditorApp extends Application {
+public class ShaderNerdEditorApp extends Application {
 	public static final Preferences preferences = new Preferences();
 	public static final Database db = new Database();
-	public static final UndoRedo.EditHistory editHistory =
-			new UndoRedo.EditHistory();
+	public static final UndoRedo.EditHistory editHistory = new UndoRedo.EditHistory();
 
-	private static final BatteryLevelReceiver batteryLevelReceiver =
-			new BatteryLevelReceiver();
+	private static final BatteryLevelReceiver batteryLevelReceiver = new BatteryLevelReceiver();
 
 	@Override
 	public void onCreate() {

@@ -20,7 +20,7 @@ import java.util.concurrent.Executors;
 import de.markusfisch.android.shadernerdeditor.R;
 import de.markusfisch.android.shadernerdeditor.activity.AddUniformActivity;
 import de.markusfisch.android.shadernerdeditor.adapter.TextureAdapter;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 
 public class UniformSampler2dPageFragment extends AddUniformPageFragment {
 	protected String searchQuery;
@@ -114,7 +114,7 @@ public class UniformSampler2dPageFragment extends AddUniformPageFragment {
 	}
 
 	protected Cursor loadTextures() {
-		return ShaderEditorApp.db.getTextures(searchQuery);
+		return ShaderNerdEditorApp.db.getTextures(searchQuery);
 	}
 
 	private void updateAdapter(Context context, Cursor cursor) {

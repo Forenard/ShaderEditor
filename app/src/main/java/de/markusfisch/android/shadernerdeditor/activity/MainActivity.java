@@ -60,7 +60,7 @@ import java.util.concurrent.Executors;
 import de.markusfisch.android.shadernerdeditor.R;
 import de.markusfisch.android.shadernerdeditor.adapter.CompletionsAdapter;
 import de.markusfisch.android.shadernerdeditor.adapter.ShaderAdapter;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.database.Database;
 import de.markusfisch.android.shadernerdeditor.fragment.EditorFragment;
 import de.markusfisch.android.shadernerdeditor.opengl.ShaderError;
@@ -131,7 +131,7 @@ public class MainActivity
 
 	@Override
 	public void onTextChanged(String text) {
-		if (!ShaderEditorApp.preferences.doesRunOnChange()) {
+		if (!ShaderNerdEditorApp.preferences.doesRunOnChange()) {
 			return;
 		}
 
@@ -195,7 +195,7 @@ public class MainActivity
 						if (selectedShaderId != FIRST_SHADER) {
 							saveShader(selectedShaderId);
 						}
-						selectShaderAndUpdate(ShaderEditorApp.db.insertShaderFromResource(
+						selectShaderAndUpdate(ShaderNerdEditorApp.db.insertShaderFromResource(
 								this,
 								result.getData().getStringExtra(LoadSampleActivity.NAME),
 								result.getData().getIntExtra(LoadSampleActivity.RESOURCE_ID,
@@ -220,7 +220,7 @@ public class MainActivity
 							postInfoLog(status.infoLog);
 						}
 
-						if (selectedShaderId > 0 && status.thumbnail != null && ShaderEditorApp.preferences.doesSaveOnRun()) {
+						if (selectedShaderId > 0 && status.thumbnail != null && ShaderNerdEditorApp.preferences.doesSaveOnRun()) {
 							saveShader(selectedShaderId);
 						}
 					}
@@ -313,7 +313,7 @@ public class MainActivity
 
 			@Override
 			public void onGlobalLayout() {
-				boolean autoHide = ShaderEditorApp.preferences.autoHideExtraKeys();
+				boolean autoHide = ShaderNerdEditorApp.preferences.autoHideExtraKeys();
 				Rect r = new Rect();
 				completions.getWindowVisibleDisplayFrame(r);
 				int screenHeight = completions.getRootView().getHeight();
@@ -325,7 +325,7 @@ public class MainActivity
 				if (keypadHeight > screenHeight * 0.15) {
 					// 0.15 ratio is perhaps enough to determine keypad height.
 					isKeyboardShowing = true;
-					if (autoHide && ShaderEditorApp.preferences.showExtraKeys()) {
+					if (autoHide && ShaderNerdEditorApp.preferences.showExtraKeys()) {
 						extraKeys.setVisibility(View.VISIBLE);
 					}
 				} else {
@@ -336,7 +336,7 @@ public class MainActivity
 				}
 			}
 		});
-		extraKeys.setVisibility(ShaderEditorApp.preferences.showExtraKeys()
+		extraKeys.setVisibility(ShaderNerdEditorApp.preferences.showExtraKeys()
 				? View.VISIBLE
 				: View.GONE);
 	}
@@ -380,7 +380,7 @@ public class MainActivity
 	}
 
 	private void toggleExtraKeys(@NonNull View view, @NonNull PopupWindow popupWindow) {
-		boolean visible = ShaderEditorApp.preferences.toggleShowExtraKeys();
+		boolean visible = ShaderNerdEditorApp.preferences.toggleShowExtraKeys();
 		updateExtraKeysToggle((CompoundButton) view, visible);
 		extraKeys.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
@@ -410,12 +410,12 @@ public class MainActivity
 		menuView.setScrollY(0);
 		updateUndoRedoMenu(menuPopup);
 		((Button) menuView.findViewById(R.id.update_wallpaper)).setText(
-				ShaderEditorApp.preferences.getWallpaperShader() ==
+				ShaderNerdEditorApp.preferences.getWallpaperShader() ==
 						selectedShaderId
 						? R.string.update_wallpaper
 						: R.string.set_as_wallpaper);
 		updateExtraKeysToggle(menuView.findViewById(R.id.show_extra_keys_box),
-				ShaderEditorApp.preferences.showExtraKeys());
+				ShaderNerdEditorApp.preferences.showExtraKeys());
 	}
 
 	private void showMenu(View anchor) {
@@ -480,7 +480,7 @@ public class MainActivity
 						quality = q;
 
 						if (selectedShaderId > 0) {
-							ShaderEditorApp.db.updateShaderQuality(
+							ShaderNerdEditorApp.db.updateShaderQuality(
 									selectedShaderId,
 									quality);
 						}
@@ -613,7 +613,7 @@ public class MainActivity
 
 	private void updateUiToPreferences() {
 		View toggleCode = toolbar.findViewById(R.id.toggle_code);
-		if (ShaderEditorApp.preferences.doesRunInBackground()) {
+		if (ShaderNerdEditorApp.preferences.doesRunInBackground()) {
 			shaderView.setVisibility(View.VISIBLE);
 			toggleCode.setVisibility(View.VISIBLE);
 			shaderView.onResume();
@@ -630,20 +630,20 @@ public class MainActivity
 		setTooltipText(toggleCode, R.string.toggle_code);
 		View runCode = toolbar.findViewById(R.id.run_code);
 		runCode.setVisibility(
-				!ShaderEditorApp.preferences.doesRunOnChange() ? View.VISIBLE : View.GONE);
+				!ShaderNerdEditorApp.preferences.doesRunOnChange() ? View.VISIBLE : View.GONE);
 		setTooltipText(runCode, R.string.run_code);
 		View insertTab = findViewById(R.id.insert_tab);
 		insertTab.setVisibility(
-				ShaderEditorApp.preferences.doesShowInsertTab() ? View.VISIBLE : View.GONE);
+				ShaderNerdEditorApp.preferences.doesShowInsertTab() ? View.VISIBLE : View.GONE);
 		setTooltipText(insertTab, R.string.insert_tab);
 
 		if (editorFragment != null) {
 			editorFragment.setShowLineNumbers(
-					ShaderEditorApp.preferences.showLineNumbers());
+					ShaderNerdEditorApp.preferences.showLineNumbers());
 			editorFragment.updateHighlighting();
 		}
 
-		extraKeys.setVisibility(ShaderEditorApp.preferences.showExtraKeys() ? View.VISIBLE :
+		extraKeys.setVisibility(ShaderNerdEditorApp.preferences.showExtraKeys() ? View.VISIBLE :
 				View.GONE);
 
 		invalidateOptionsMenu();
@@ -654,21 +654,21 @@ public class MainActivity
 	}
 
 	private void autoSave() {
-		if (ShaderEditorApp.preferences.autoSave() &&
+		if (ShaderNerdEditorApp.preferences.autoSave() &&
 				selectedShaderId > 0) {
 			saveShader(selectedShaderId);
 		}
 	}
 
 	private void getShadersAsync() {
-		if (!ShaderEditorApp.db.isOpen()) {
+		if (!ShaderNerdEditorApp.db.isOpen()) {
 			listView.postDelayed(this::getShadersAsync, 500);
 			return;
 		}
 		Handler handler = new Handler(Looper.getMainLooper());
 		Executors.newSingleThreadExecutor().execute(() -> {
-			Cursor cursor = ShaderEditorApp.db.getShaders(
-					ShaderEditorApp.preferences.sortByLastModification());
+			Cursor cursor = ShaderNerdEditorApp.db.getShaders(
+					ShaderNerdEditorApp.preferences.sortByLastModification());
 			handler.post(() -> updateShaderAdapter(cursor));
 		});
 	}
@@ -788,7 +788,7 @@ public class MainActivity
 		String src = editorFragment.getText();
 		editorFragment.clearError();
 
-		if (ShaderEditorApp.preferences.doesSaveOnRun()) {
+		if (ShaderNerdEditorApp.preferences.doesSaveOnRun()) {
 			// Don't save the old thumbnail.
 			// onActivityResult() will add an
 			// updated one.
@@ -797,7 +797,7 @@ public class MainActivity
 			saveShader(selectedShaderId);
 		}
 
-		if (ShaderEditorApp.preferences.doesRunInBackground()) {
+		if (ShaderNerdEditorApp.preferences.doesRunInBackground()) {
 			setFragmentShader(src);
 		} else {
 			showPreview(src);
@@ -810,18 +810,18 @@ public class MainActivity
 		}
 
 		String fragmentShader = editorFragment.getText();
-		byte[] thumbnail = ShaderEditorApp.preferences.doesRunInBackground()
+		byte[] thumbnail = ShaderNerdEditorApp.preferences.doesRunInBackground()
 				? shaderView.getRenderer().getThumbnail()
 				: PreviewActivity.renderStatus.thumbnail;
 
 		if (id > 0) {
-			ShaderEditorApp.db.updateShader(
+			ShaderNerdEditorApp.db.updateShader(
 					id,
 					fragmentShader,
 					thumbnail,
 					quality);
 		} else {
-			setToolbarTitle(ShaderEditorApp.db.insertShader(
+			setToolbarTitle(ShaderNerdEditorApp.db.insertShader(
 					fragmentShader,
 					thumbnail,
 					quality));
@@ -840,26 +840,26 @@ public class MainActivity
 	}
 
 	private void addShader() {
-		long id = ShaderEditorApp.preferences.getDefaultNewShader();
+		long id = ShaderNerdEditorApp.preferences.getDefaultNewShader();
 		if (id > 0) {
-			if (!ShaderEditorApp.db.isShaderAvailable(id)) {
-				ShaderEditorApp.preferences.setDefaultNewShader(0);
+			if (!ShaderNerdEditorApp.db.isShaderAvailable(id)) {
+				ShaderNerdEditorApp.preferences.setDefaultNewShader(0);
 			} else {
 				duplicateShader(id);
 				return;
 			}
 		}
-		selectShaderAndUpdate(ShaderEditorApp.db.insertNewShader(this));
+		selectShaderAndUpdate(ShaderNerdEditorApp.db.insertNewShader(this));
 	}
 
 	private void duplicateShader(long id) {
-		Cursor cursor = ShaderEditorApp.db.getShader(id);
+		Cursor cursor = ShaderNerdEditorApp.db.getShader(id);
 		if (Database.closeIfEmpty(cursor)) {
 			return;
 		}
-		selectShaderAndUpdate(ShaderEditorApp.db.insertShader(
+		selectShaderAndUpdate(ShaderNerdEditorApp.db.insertShader(
 				Database.getString(cursor, Database.SHADERS_FRAGMENT_SHADER),
-				ShaderEditorApp.db.getThumbnail(id),
+				ShaderNerdEditorApp.db.getThumbnail(id),
 				Database.getFloat(cursor, Database.SHADERS_QUALITY)));
 		cursor.close();
 	}
@@ -873,9 +873,9 @@ public class MainActivity
 			saveShader(selectedShaderId);
 		}
 
-		selectShaderAndUpdate(ShaderEditorApp.db.insertShader(
+		selectShaderAndUpdate(ShaderNerdEditorApp.db.insertShader(
 				editorFragment.getText(),
-				ShaderEditorApp.db.getThumbnail(selectedShaderId),
+				ShaderNerdEditorApp.db.getThumbnail(selectedShaderId),
 				quality));
 
 		// Update thumbnails.
@@ -891,8 +891,8 @@ public class MainActivity
 				.setPositiveButton(
 						android.R.string.ok,
 						(dialog, which) -> {
-							ShaderEditorApp.db.removeShader(id);
-							selectShaderAndUpdate(ShaderEditorApp
+							ShaderNerdEditorApp.db.removeShader(id);
+							selectShaderAndUpdate(ShaderNerdEditorApp
 									.db.getFirstShaderId());
 						})
 				.setNegativeButton(android.R.string.cancel, null)
@@ -905,10 +905,10 @@ public class MainActivity
 		}
 
 		String text = editorFragment.getText();
-		if (!ShaderEditorApp.preferences.exportTabs() &&
+		if (!ShaderNerdEditorApp.preferences.exportTabs() &&
 				text.contains("\t")) {
 			StringBuilder sb = new StringBuilder();
-			for (int i = ShaderEditorApp.preferences.getTabWidth();
+			for (int i = ShaderNerdEditorApp.preferences.getTabWidth();
 					i-- > 0; ) {
 				sb.append(" ");
 			}
@@ -936,8 +936,8 @@ public class MainActivity
 
 		// The onSharedPreferenceChanged() listener in WallpaperService
 		// is only triggered if the value has changed so force this.
-		ShaderEditorApp.preferences.setWallpaperShader(0);
-		ShaderEditorApp.preferences.setWallpaperShader(id);
+		ShaderNerdEditorApp.preferences.setWallpaperShader(0);
+		ShaderNerdEditorApp.preferences.setWallpaperShader(id);
 
 		int message;
 		if (!canSetWallpaper()) {
@@ -1024,7 +1024,7 @@ public class MainActivity
 				.setPositiveButton(android.R.string.ok,
 						(dialog, which) -> {
 							String name1 = nameView.getText().toString();
-							ShaderEditorApp.db.updateShaderName(id, name1);
+							ShaderNerdEditorApp.db.updateShaderName(id, name1);
 							if (id == selectedShaderId) {
 								setToolbarTitle(name1);
 							}
@@ -1060,7 +1060,7 @@ public class MainActivity
 	}
 
 	private long loadShader(long id) {
-		Cursor cursor = ShaderEditorApp.db.getShader(id);
+		Cursor cursor = ShaderNerdEditorApp.db.getShader(id);
 
 		if (Database.closeIfEmpty(cursor)) {
 			return 0;
@@ -1086,7 +1086,7 @@ public class MainActivity
 		if (editorFragment != null) {
 			// Runs setFragmentShader() in onTextChanged().
 			editorFragment.setText(fragmentShader);
-		} else if (ShaderEditorApp.preferences.doesRunInBackground()) {
+		} else if (ShaderNerdEditorApp.preferences.doesRunInBackground()) {
 			setFragmentShader(fragmentShader);
 		}
 	}
@@ -1096,7 +1096,7 @@ public class MainActivity
 	}
 
 	private void setToolbarTitle(long id) {
-		Cursor cursor = ShaderEditorApp.db.getShader(id);
+		Cursor cursor = ShaderNerdEditorApp.db.getShader(id);
 		if (Database.closeIfEmpty(cursor)) {
 			return;
 		}
@@ -1143,7 +1143,7 @@ public class MainActivity
 		intent.putExtra(PreviewActivity.QUALITY, quality);
 		intent.putExtra(PreviewActivity.FRAGMENT_SHADER, src);
 
-		if (ShaderEditorApp.preferences.doesRunInNewTask() &&
+		if (ShaderNerdEditorApp.preferences.doesRunInNewTask() &&
 				Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 			intent.setFlags(Intent.FLAG_ACTIVITY_LAUNCH_ADJACENT |
 					Intent.FLAG_ACTIVITY_NEW_TASK);

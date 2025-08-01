@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 
 import de.markusfisch.android.shadernerdeditor.activity.CubeMapActivity;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 
 public class UniformSamplerCubePageFragment
 		extends UniformSampler2dPageFragment {
@@ -27,6 +27,6 @@ public class UniformSamplerCubePageFragment
 
 	@Override
 	protected Cursor loadTextures() {
-		return ShaderEditorApp.db.getSamplerCubeTextures(searchQuery);
+		return ShaderNerdEditorApp.db.getSamplerCubeTextures(searchQuery);
 	}
 }

@@ -23,7 +23,7 @@ import java.util.concurrent.Executors;
 
 import de.markusfisch.android.shadernerdeditor.R;
 import de.markusfisch.android.shadernerdeditor.activity.AbstractSubsequentActivity;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.database.Database;
 import de.markusfisch.android.shadernerdeditor.widget.ScalingImageView;
 
@@ -70,11 +70,11 @@ public class TextureViewFragment extends Fragment {
 				(args = getArguments()) == null ||
 				(textureId = args.getLong(TEXTURE_ID)) < 1 ||
 				(samplerType = args.getString(SAMPLER_TYPE)) == null ||
-				(cursor = ShaderEditorApp.db.getTexture(textureId)) == null ||
+				(cursor = ShaderNerdEditorApp.db.getTexture(textureId)) == null ||
 				Database.closeIfEmpty(cursor)) {
 			if (cursor != null && textureId > 0) {
 				// Automatically remove defect textures.
-				ShaderEditorApp.db.removeTexture(textureId);
+				ShaderNerdEditorApp.db.removeTexture(textureId);
 				Toast.makeText(activity, R.string.removed_invalid_texture,
 						Toast.LENGTH_LONG).show();
 			}
@@ -88,7 +88,7 @@ public class TextureViewFragment extends Fragment {
 			textureName = Database.getString(cursor,
 					Database.TEXTURES_NAME);
 			imageView.setImageBitmap(
-					ShaderEditorApp.db.getTextureBitmap(cursor));
+					ShaderNerdEditorApp.db.getTextureBitmap(cursor));
 		} catch (IllegalStateException e) {
 			if (textureName == null) {
 				textureName = getString(R.string.image_too_big);
@@ -144,7 +144,7 @@ public class TextureViewFragment extends Fragment {
 	private void removeTextureAsync(final long id) {
 		Handler handler = new Handler(Looper.getMainLooper());
 		Executors.newSingleThreadExecutor().execute(() -> {
-			ShaderEditorApp.db.removeTexture(id);
+			ShaderNerdEditorApp.db.removeTexture(id);
 			handler.post(() -> {
 				Activity activity = getActivity();
 				if (activity == null) {

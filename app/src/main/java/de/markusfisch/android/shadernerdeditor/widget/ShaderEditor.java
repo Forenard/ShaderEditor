@@ -42,7 +42,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import de.markusfisch.android.shadernerdeditor.R;
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.highlighter.Highlight;
 import de.markusfisch.android.shadernerdeditor.highlighter.Lexer;
 import de.markusfisch.android.shadernerdeditor.highlighter.Token;
@@ -316,7 +316,7 @@ public class ShaderEditor extends LineNumberEditText {
 	@Override
 	public InputConnection onCreateInputConnection(@NonNull EditorInfo outAttrs) {
 		InputConnection connection = super.onCreateInputConnection(outAttrs);
-		if (ShaderEditorApp.preferences.hideNativeSuggestions()) {
+		if (ShaderNerdEditorApp.preferences.hideNativeSuggestions()) {
 			outAttrs.inputType = InputType.TYPE_NULL;
 		}
 		return connection;
@@ -434,11 +434,11 @@ public class ShaderEditor extends LineNumberEditText {
 		});
 
 		setSyntaxColors(context);
-		setUpdateDelay(ShaderEditorApp.preferences.getUpdateDelay());
-		setTabWidth(ShaderEditorApp.preferences.getTabWidth());
+		setUpdateDelay(ShaderNerdEditorApp.preferences.getUpdateDelay());
+		setTabWidth(ShaderNerdEditorApp.preferences.getTabWidth());
 
 		setOnKeyListener((v, keyCode, event) -> {
-			if (ShaderEditorApp.preferences.useTabForIndent() &&
+			if (ShaderNerdEditorApp.preferences.useTabForIndent() &&
 					event.getAction() == KeyEvent.ACTION_DOWN &&
 					keyCode == KeyEvent.KEYCODE_TAB) {
 				// Insert a tab character instead of doing focus
@@ -487,7 +487,7 @@ public class ShaderEditor extends LineNumberEditText {
 			e.replace(m.start(), m.end(), " ");
 		}
 
-		if (ShaderEditorApp.preferences.disableHighlighting() &&
+		if (ShaderNerdEditorApp.preferences.disableHighlighting() &&
 				length > 4096) {
 			clearSpans(e, 0, length, ForegroundColorSpan.class);
 			return e;

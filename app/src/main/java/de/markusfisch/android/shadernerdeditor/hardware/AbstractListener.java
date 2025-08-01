@@ -6,7 +6,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 
 public abstract class AbstractListener implements SensorEventListener {
 	long last = 0;
@@ -47,7 +47,7 @@ public abstract class AbstractListener implements SensorEventListener {
 
 		last = 0;
 		listening = sensorManager.registerListener(this, sensor,
-				ShaderEditorApp.preferences.getSensorDelay());
+				ShaderNerdEditorApp.preferences.getSensorDelay());
 
 		return listening;
 	}

@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.opengl.GLSurfaceView;
 import android.os.BatteryManager;
 
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 import de.markusfisch.android.shadernerdeditor.service.ShaderWallpaperService;
 
 public class BatteryLevelReceiver extends BroadcastReceiver {
@@ -32,18 +32,18 @@ public class BatteryLevelReceiver extends BroadcastReceiver {
 	}
 
 	private static void setPowerConnected(boolean connected) {
-		ShaderEditorApp.preferences.setPowerConnected(connected);
+		ShaderNerdEditorApp.preferences.setPowerConnected(connected);
 	}
 
 	public static void setLowPowerMode(boolean low) {
-		if (!ShaderEditorApp.preferences.saveBattery()) {
+		if (!ShaderNerdEditorApp.preferences.saveBattery()) {
 			low = false;
 		}
 		// Fall through to update battery flag and
 		// render mode because the preference may
 		// have changed while battery is low.
 
-		ShaderEditorApp.preferences.setBatteryLow(low);
+		ShaderNerdEditorApp.preferences.setBatteryLow(low);
 		ShaderWallpaperService.setRenderMode(low
 				? GLSurfaceView.RENDERMODE_WHEN_DIRTY
 				: GLSurfaceView.RENDERMODE_CONTINUOUSLY);

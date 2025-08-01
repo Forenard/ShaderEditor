@@ -9,7 +9,7 @@ import android.opengl.GLES30;
 
 import androidx.annotation.NonNull;
 
-import de.markusfisch.android.shadernerdeditor.app.ShaderEditorApp;
+import de.markusfisch.android.shadernerdeditor.app.ShaderNerdEditorApp;
 
 public class BackBufferParameters extends TextureParameters {
 	private static final String PRESET = "p";
@@ -53,7 +53,7 @@ public class BackBufferParameters extends TextureParameters {
 			return null;
 		}
 
-		Bitmap tile = ShaderEditorApp.db.getTextureBitmap(preset);
+		Bitmap tile = ShaderNerdEditorApp.db.getTextureBitmap(preset);
 		if (tile == null) {
 			return null;
 		}
