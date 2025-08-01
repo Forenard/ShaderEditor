@@ -105,6 +105,7 @@ public class MainActivity
 	private float quality = 1f;
 	private CompletionsAdapter completionsAdapter;
 	private Button showErrorBtn;
+	private boolean isFullscreen = false;
 
 	private ActivityResultLauncher<Intent> addUniformLauncher;
 	private ActivityResultLauncher<Intent> loadSampleLauncher;
@@ -163,9 +164,8 @@ public class MainActivity
 		initListView();
 		initShaderView();
 
-		if (state == null || (editorFragment =
-				(EditorFragment) getSupportFragmentManager()
-						.findFragmentByTag(EditorFragment.TAG)) == null) {
+		if (state == null || (editorFragment = (EditorFragment) getSupportFragmentManager()
+				.findFragmentByTag(EditorFragment.TAG)) == null) {
 			editorFragment = new EditorFragment();
 			getSupportFragmentManager()
 					.beginTransaction()
@@ -220,7 +220,8 @@ public class MainActivity
 							postInfoLog(status.infoLog);
 						}
 
-						if (selectedShaderId > 0 && status.thumbnail != null && ShaderNerdEditorApp.preferences.doesSaveOnRun()) {
+						if (selectedShaderId > 0 && status.thumbnail != null
+								&& ShaderNerdEditorApp.preferences.doesSaveOnRun()) {
 							saveShader(selectedShaderId);
 						}
 					}
@@ -373,6 +374,7 @@ public class MainActivity
 				.setClickListener(R.id.update_wallpaper, () -> updateWallpaper(selectedShaderId))
 				.setClickListener(R.id.add_uniform, this::addUniform)
 				.setClickListener(R.id.load_sample, this::loadSample)
+				.setClickListener(R.id.toggle_fullscreen, this::toggleFullscreen)
 				.setClickListener(R.id.settings, this::showSettings)
 				.setClickListener(R.id.faq, this::showFaq)
 				.setClickListener(R.id.show_extra_keys_box, this::toggleExtraKeys, false)
@@ -387,12 +389,11 @@ public class MainActivity
 
 	private void updateExtraKeysToggle(@NonNull CompoundButton extraKeysToggle, boolean visible) {
 		extraKeysToggle.setChecked(visible);
-		Drawable drawable = ContextCompat.getDrawable(this, visible ?
-				R.drawable.ic_bottom_panel_close : R.drawable.ic_bottom_panel_open);
+		Drawable drawable = ContextCompat.getDrawable(this,
+				visible ? R.drawable.ic_bottom_panel_close : R.drawable.ic_bottom_panel_open);
 		{
 			Drawable[] drawables = extraKeysToggle.getCompoundDrawablesRelative();
-			extraKeysToggle.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, drawables[1]
-					, drawables[2],
+			extraKeysToggle.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, drawables[1], drawables[2],
 					drawables[3]);
 		}
 	}
@@ -410,8 +411,7 @@ public class MainActivity
 		menuView.setScrollY(0);
 		updateUndoRedoMenu(menuPopup);
 		((Button) menuView.findViewById(R.id.update_wallpaper)).setText(
-				ShaderNerdEditorApp.preferences.getWallpaperShader() ==
-						selectedShaderId
+				ShaderNerdEditorApp.preferences.getWallpaperShader() == selectedShaderId
 						? R.string.update_wallpaper
 						: R.string.set_as_wallpaper);
 		updateExtraKeysToggle(menuView.findViewById(R.id.show_extra_keys_box),
@@ -574,6 +574,9 @@ public class MainActivity
 						postInfoLog(infoLog);
 					}
 				});
+
+		// Set fullscreen toggle listener for double tap
+		shaderView.setOnFullscreenToggleListener(this::toggleFullscreen);
 	}
 
 	private void postUpdateFps(int fps) {
@@ -605,8 +608,7 @@ public class MainActivity
 								.show();
 					}
 				}
-				showErrorBtn.setVisibility(editorFragment.hasErrors() ? View.VISIBLE :
-						View.GONE);
+				showErrorBtn.setVisibility(editorFragment.hasErrors() ? View.VISIBLE : View.GONE);
 			}
 		});
 	}
@@ -643,8 +645,7 @@ public class MainActivity
 			editorFragment.updateHighlighting();
 		}
 
-		extraKeys.setVisibility(ShaderNerdEditorApp.preferences.showExtraKeys() ? View.VISIBLE :
-				View.GONE);
+		extraKeys.setVisibility(ShaderNerdEditorApp.preferences.showExtraKeys() ? View.VISIBLE : View.GONE);
 
 		invalidateOptionsMenu();
 	}
@@ -772,7 +773,7 @@ public class MainActivity
 			}
 			StringBuilder sb = new StringBuilder();
 			byte[] buffer = new byte[2048];
-			for (int len; (len = in.read(buffer)) > 0; ) {
+			for (int len; (len = in.read(buffer)) > 0;) {
 				// StandardCharsets.UTF_8 would require API level 19.
 				// noinspection CharsetObjectCanBeUsed
 				sb.append(new String(buffer, 0, len, "UTF-8"));
@@ -839,6 +840,61 @@ public class MainActivity
 		}
 	}
 
+	private void toggleFullscreen() {
+		isFullscreen = !isFullscreen;
+
+		if (isFullscreen) {
+			enterFullscreen();
+		} else {
+			exitFullscreen();
+		}
+	}
+
+	private void enterFullscreen() {
+		// Hide system bars using immersive mode
+		getWindow().getDecorView().setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY |
+						View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+						View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
+						View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
+						View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
+						View.SYSTEM_UI_FLAG_FULLSCREEN);
+
+		// Hide toolbar and coordinator layout
+		View coordinator = findViewById(R.id.main_coordinator);
+		if (coordinator != null) {
+			coordinator.setVisibility(View.GONE);
+		}
+
+		// Hide editor code if visible
+		if (editorFragment != null && editorFragment.isCodeVisible()) {
+			editorFragment.toggleCode();
+			drawerLayout.setTouchThru(true);
+		}
+
+		// Hide extra keys
+		extraKeys.setVisibility(View.GONE);
+
+		// Make sure shader view is visible
+		shaderView.setVisibility(View.VISIBLE);
+	}
+
+	private void exitFullscreen() {
+		// Show system bars
+		getWindow().getDecorView().setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
+						View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+		// Show toolbar and coordinator layout
+		View coordinator = findViewById(R.id.main_coordinator);
+		if (coordinator != null) {
+			coordinator.setVisibility(View.VISIBLE);
+		}
+
+		// Restore UI based on preferences
+		updateUiToPreferences();
+	}
+
 	private void addShader() {
 		long id = ShaderNerdEditorApp.preferences.getDefaultNewShader();
 		if (id > 0) {
@@ -892,8 +948,7 @@ public class MainActivity
 						android.R.string.ok,
 						(dialog, which) -> {
 							ShaderNerdEditorApp.db.removeShader(id);
-							selectShaderAndUpdate(ShaderNerdEditorApp
-									.db.getFirstShaderId());
+							selectShaderAndUpdate(ShaderNerdEditorApp.db.getFirstShaderId());
 						})
 				.setNegativeButton(android.R.string.cancel, null)
 				.show();
@@ -908,8 +963,7 @@ public class MainActivity
 		if (!ShaderNerdEditorApp.preferences.exportTabs() &&
 				text.contains("\t")) {
 			StringBuilder sb = new StringBuilder();
-			for (int i = ShaderNerdEditorApp.preferences.getTabWidth();
-					i-- > 0; ) {
+			for (int i = ShaderNerdEditorApp.preferences.getTabWidth(); i-- > 0;) {
 				sb.append(" ");
 			}
 			text = text.replaceAll("\t", sb.toString());
@@ -1223,8 +1277,7 @@ public class MainActivity
 			popupWindow = new PopupWindow(
 					view,
 					LayoutParams.WRAP_CONTENT,
-					LayoutParams.MATCH_PARENT
-			);
+					LayoutParams.MATCH_PARENT);
 			popupWindow.setOutsideTouchable(true);
 			popupWindow.setFocusable(true);
 			popupWindow.setElevation(6 * getResources().getDisplayMetrics().density);

@@ -123,6 +123,14 @@
 			app:dividerInsetStart="8dp" />
 
 		<Button
+			android:id="@+id/toggle_fullscreen"
+			style="@style/MenuItem"
+			android:layout_width="match_parent"
+			android:layout_height="@dimen/menu_item_height"
+			android:text="@string/toggle_fullscreen"
+			app:icon="@drawable/ic_fullscreen" />
+
+		<Button
 			android:id="@+id/settings"
 			style="@style/MenuItem"
 			android:layout_width="match_parent"

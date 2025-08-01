@@ -4,7 +4,10 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
+
+import androidx.annotation.NonNull;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -14,7 +17,13 @@ import javax.microedition.khronos.egl.EGLDisplay;
 import de.markusfisch.android.shadernerdeditor.opengl.ShaderRenderer;
 
 public class ShaderView extends GLSurfaceView {
+	public interface OnFullscreenToggleListener {
+		void onFullscreenToggle();
+	}
+
 	private ShaderRenderer renderer;
+	private GestureDetector gestureDetector;
+	private OnFullscreenToggleListener fullscreenToggleListener;
 
 	public ShaderView(Context context, int renderMode) {
 		super(context);
@@ -41,8 +50,17 @@ public class ShaderView extends GLSurfaceView {
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		// Handle double tap for fullscreen toggle
+		if (gestureDetector != null && gestureDetector.onTouchEvent(event)) {
+			return true;
+		}
+
 		renderer.touchAt(event);
 		return true;
+	}
+
+	public void setOnFullscreenToggleListener(OnFullscreenToggleListener listener) {
+		this.fullscreenToggleListener = listener;
 	}
 
 	public void setFragmentShader(String src, float quality) {
@@ -62,6 +80,18 @@ public class ShaderView extends GLSurfaceView {
 
 	private void init(Context context, int renderMode) {
 		renderer = new ShaderRenderer(context);
+
+		// Initialize gesture detector for double tap
+		gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
+			@Override
+			public boolean onDoubleTap(@NonNull MotionEvent e) {
+				if (fullscreenToggleListener != null) {
+					fullscreenToggleListener.onFullscreenToggle();
+					return true;
+				}
+				return false;
+			}
+		});
 
 		// On some devices it's important to setEGLContextClientVersion()
 		// even if the docs say it's not used when setEGLContextFactory()
