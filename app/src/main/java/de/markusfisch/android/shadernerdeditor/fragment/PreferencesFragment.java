@@ -82,9 +82,6 @@ public class PreferencesFragment
 								Toast.LENGTH_LONG).show();
 					}
 				});
-
-		addPreferencesFromResource(R.xml.preferences);
-		wireImportExport();
 	}
 
 	@Override
@@ -138,7 +135,8 @@ public class PreferencesFragment
 		if (preference instanceof ShaderListPreference listPreference) {
 			String key = listPreference.getKey();
 			DialogFragment f = ShaderListPreferenceDialogFragment.newInstance(key);
-			// FIXME: Periodically check whether androidx.preference still uses TargetFragment
+			// FIXME: Periodically check whether androidx.preference still uses
+			// TargetFragment
 			// noinspection deprecation
 			f.setTargetFragment(this, 0);
 
@@ -151,7 +149,7 @@ public class PreferencesFragment
 	}
 
 	private void setSummaries(@NonNull PreferenceGroup screen) {
-		for (int i = screen.getPreferenceCount(); i-- > 0; ) {
+		for (int i = screen.getPreferenceCount(); i-- > 0;) {
 			setSummary(screen.getPreference(i));
 		}
 	}
@@ -192,8 +190,7 @@ public class PreferencesFragment
 	private boolean checkExternalStoragePermission(@NonNull String permission) {
 		FragmentActivity activity = getActivity();
 		if (activity != null &&
-				ContextCompat.checkSelfPermission(activity, permission)
-						!= PackageManager.PERMISSION_GRANTED) {
+				ContextCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
 
 			if (permission.equals(Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 				requestWritePermissionLauncher.launch(permission);
