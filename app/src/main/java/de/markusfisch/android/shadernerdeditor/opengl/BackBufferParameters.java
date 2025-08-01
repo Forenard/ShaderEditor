@@ -15,12 +15,30 @@ public class BackBufferParameters extends TextureParameters {
 	private static final String PRESET = "p";
 
 	private String preset;
+	private boolean useFloatTextures = false;
 
 	public BackBufferParameters() {
 		super(GLES30.GL_NEAREST,
 				GLES30.GL_NEAREST,
 				GLES30.GL_CLAMP_TO_EDGE,
 				GLES30.GL_CLAMP_TO_EDGE);
+	}
+
+	public void setUseFloatTextures(boolean useFloatTextures) {
+		this.useFloatTextures = useFloatTextures;
+		if (useFloatTextures) {
+			// For float textures, use linear filtering without mipmaps
+			set(GLES30.GL_LINEAR,
+					GLES30.GL_LINEAR,
+					GLES30.GL_CLAMP_TO_EDGE,
+					GLES30.GL_CLAMP_TO_EDGE);
+		} else {
+			// Reset to default for 8-bit textures with mipmap support
+			set(GLES30.GL_NEAREST_MIPMAP_LINEAR,
+					GLES30.GL_LINEAR,
+					GLES30.GL_CLAMP_TO_EDGE,
+					GLES30.GL_CLAMP_TO_EDGE);
+		}
 	}
 
 	public void setPreset(String preset) {

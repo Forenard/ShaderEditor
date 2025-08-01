@@ -14,6 +14,7 @@ import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLUtils;
 import android.os.BatteryManager;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.WindowManager;
@@ -54,6 +55,8 @@ import de.markusfisch.android.shadernerdeditor.hardware.MicInputListener;
 import de.markusfisch.android.shadernerdeditor.service.NotificationService;
 
 public class ShaderRenderer implements GLSurfaceView.Renderer {
+	private static final String TAG = "ShaderRenderer";
+
 	public interface OnRendererListener {
 		void onInfoLog(@NonNull List<ShaderError> error);
 
@@ -100,6 +103,21 @@ public class ShaderRenderer implements GLSurfaceView.Renderer {
 	public static final String UNIFORM_MIC_AMPLITUDE = "micAmplitude";
 	public static final String UNIFORM_TOUCH = "touch";
 	public static final String UNIFORM_TOUCH_START = "touchStart";
+
+	// OpenGL constants for 32-bit float textures
+	private static final int GL_RGBA32F = 0x8814;
+	private static final int GL_FLOAT = 0x1406;
+
+	// Flag to track if 32-bit float textures are supported
+	private boolean supportsFloatTextures = false;
+
+	// Debug helper method
+	private void checkGLError(String operation) {
+		int error = GLES30.glGetError();
+		if (error != GLES30.GL_NO_ERROR) {
+			Log.e(TAG, "OpenGL error after " + operation + ": " + error);
+		}
+	}
 
 	private static final int[] TEXTURE_UNITS = {
 			GLES30.GL_TEXTURE0,
@@ -354,6 +372,21 @@ public class ShaderRenderer implements GLSurfaceView.Renderer {
 		GLES30.glDisable(GLES30.GL_DEPTH_TEST);
 
 		GLES30.glClearColor(0f, 0f, 0f, 1f);
+
+		// Check if 32-bit float textures are supported
+		String extensions = GLES30.glGetString(GLES30.GL_EXTENSIONS);
+		supportsFloatTextures = extensions != null &&
+				(extensions.contains("GL_EXT_color_buffer_float") ||
+						extensions.contains("GL_EXT_color_buffer_half_float"));
+
+		// Debug logging
+		Log.i(TAG, "OpenGL Version: " + GLES30.glGetString(GLES30.GL_VERSION));
+		Log.i(TAG, "OpenGL Vendor: " + GLES30.glGetString(GLES30.GL_VENDOR));
+		Log.i(TAG, "OpenGL Renderer: " + GLES30.glGetString(GLES30.GL_RENDERER));
+		Log.i(TAG, "32-bit float texture support: " + supportsFloatTextures);
+		if (extensions != null) {
+			Log.d(TAG, "OpenGL Extensions: " + extensions);
+		}
 
 		if (surfaceProgram != 0) {
 			// Don't glDeleteProgram(surfaceProgram) because
@@ -997,16 +1030,42 @@ public class ShaderRenderer implements GLSurfaceView.Renderer {
 		final int pixels = min * min;
 		final int[] rgba = new int[pixels];
 		final int[] bgra = new int[pixels];
-		final IntBuffer colorBuffer = IntBuffer.wrap(rgba);
 
-		GLES30.glReadPixels(
-				0,
-				0,
-				min,
-				min,
-				GLES30.GL_RGBA,
-				GLES30.GL_UNSIGNED_BYTE,
-				colorBuffer);
+		if (supportsFloatTextures) {
+			// For float textures, we need to read as float and convert
+			final float[] floatRgba = new float[pixels * 4];
+			final java.nio.FloatBuffer floatBuffer = java.nio.FloatBuffer.wrap(floatRgba);
+
+			GLES30.glReadPixels(
+					0,
+					0,
+					min,
+					min,
+					GLES30.GL_RGBA,
+					GL_FLOAT,
+					floatBuffer);
+
+			// Convert float values to int RGBA
+			for (int i = 0; i < pixels; i++) {
+				int r = Math.max(0, Math.min(255, (int) (floatRgba[i * 4] * 255.0f)));
+				int g = Math.max(0, Math.min(255, (int) (floatRgba[i * 4 + 1] * 255.0f)));
+				int b = Math.max(0, Math.min(255, (int) (floatRgba[i * 4 + 2] * 255.0f)));
+				int a = Math.max(0, Math.min(255, (int) (floatRgba[i * 4 + 3] * 255.0f)));
+				rgba[i] = (a << 24) | (r << 16) | (g << 8) | b;
+			}
+		} else {
+			// For 8-bit textures, use the original method
+			final IntBuffer colorBuffer = IntBuffer.wrap(rgba);
+
+			GLES30.glReadPixels(
+					0,
+					0,
+					min,
+					min,
+					GLES30.GL_RGBA,
+					GLES30.GL_UNSIGNED_BYTE,
+					colorBuffer);
+		}
 
 		for (int i = 0, e = pixels; i < pixels;) {
 			e -= min;
@@ -1150,21 +1209,49 @@ public class ShaderRenderer implements GLSurfaceView.Renderer {
 		Bitmap bitmap = tp.getPresetBitmap(width, height);
 		if (bitmap != null) {
 			setTexture(bitmap);
+			Log.d(TAG, "Created backbuffer target " + idx + " with preset bitmap (" + width + "x" + height + ")");
 		} else {
-			GLES30.glTexImage2D(
-					GLES30.GL_TEXTURE_2D,
-					0,
-					GLES30.GL_RGBA,
-					width,
-					height,
-					0,
-					GLES30.GL_RGBA,
-					GLES30.GL_UNSIGNED_BYTE,
-					null);
+			// Use 32-bit float if supported, otherwise fall back to 8-bit
+			if (supportsFloatTextures) {
+				GLES30.glTexImage2D(
+						GLES30.GL_TEXTURE_2D,
+						0,
+						GL_RGBA32F, // 32-bit float internal format
+						width,
+						height,
+						0,
+						GLES30.GL_RGBA,
+						GL_FLOAT, // 32-bit float data type
+						null);
+				// Configure texture parameters for float precision
+				tp.setUseFloatTextures(true);
+				Log.i(TAG, "Created 32-bit float backbuffer target " + idx + " (" + width + "x" + height + ")");
+			} else {
+				GLES30.glTexImage2D(
+						GLES30.GL_TEXTURE_2D,
+						0,
+						GLES30.GL_RGBA,
+						width,
+						height,
+						0,
+						GLES30.GL_RGBA,
+						GLES30.GL_UNSIGNED_BYTE,
+						null);
+				// Configure texture parameters for 8-bit precision
+				tp.setUseFloatTextures(false);
+				Log.i(TAG, "Created 8-bit backbuffer target " + idx + " (" + width + "x" + height + ")");
+			}
 		}
 
 		tp.setParameters(GLES30.GL_TEXTURE_2D);
-		GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
+		checkGLError("setParameters");
+
+		// Generate mipmaps only if not using float textures or if float mipmaps are
+		// supported
+		if (!supportsFloatTextures || bitmap != null) {
+			GLES30.glGenerateMipmap(GLES30.GL_TEXTURE_2D);
+			checkGLError("generateMipmap");
+		}
 
 		GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, fb[idx]);
 		GLES30.glFramebufferTexture2D(
@@ -1173,6 +1260,13 @@ public class ShaderRenderer implements GLSurfaceView.Renderer {
 				GLES30.GL_TEXTURE_2D,
 				tx[idx],
 				0);
+		checkGLError("framebuffer setup");
+
+		// Check framebuffer completeness
+		int status = GLES30.glCheckFramebufferStatus(GLES30.GL_FRAMEBUFFER);
+		if (status != GLES30.GL_FRAMEBUFFER_COMPLETE) {
+			Log.e(TAG, "Framebuffer not complete for target " + idx + ": " + status);
+		}
 
 		if (bitmap == null) {
 			// Clear texture because some drivers
