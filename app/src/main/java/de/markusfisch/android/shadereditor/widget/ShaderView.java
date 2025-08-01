@@ -66,7 +66,7 @@ public class ShaderView extends GLSurfaceView {
 		// On some devices it's important to setEGLContextClientVersion()
 		// even if the docs say it's not used when setEGLContextFactory()
 		// is called. Not doing so will crash the app (e.g. on the FP1).
-		setEGLContextClientVersion(2);
+		setEGLContextClientVersion(3);
 		setEGLContextFactory(new ContextFactory(renderer));
 		setRenderer(renderer);
 		setRenderMode(renderMode);

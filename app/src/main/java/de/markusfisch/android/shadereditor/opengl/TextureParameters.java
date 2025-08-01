@@ -2,7 +2,7 @@ package de.markusfisch.android.shadereditor.opengl;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLUtils;
 
 import androidx.annotation.NonNull;
@@ -33,10 +33,10 @@ public class TextureParameters {
 	private int wrapT;
 
 	public TextureParameters() {
-		defaultMin = GLES20.GL_NEAREST;
-		defaultMag = GLES20.GL_LINEAR;
-		defaultWrapS = GLES20.GL_REPEAT;
-		defaultWrapT = GLES20.GL_REPEAT;
+		defaultMin = GLES30.GL_NEAREST;
+		defaultMag = GLES30.GL_LINEAR;
+		defaultWrapS = GLES30.GL_REPEAT;
+		defaultWrapT = GLES30.GL_REPEAT;
 		set(defaultMin, defaultMag, defaultWrapS, defaultWrapT);
 	}
 
@@ -105,21 +105,21 @@ public class TextureParameters {
 	}
 
 	void setParameters(int target) {
-		GLES20.glTexParameteri(
+		GLES30.glTexParameteri(
 				target,
-				GLES20.GL_TEXTURE_MIN_FILTER,
+				GLES30.GL_TEXTURE_MIN_FILTER,
 				min);
-		GLES20.glTexParameteri(
+		GLES30.glTexParameteri(
 				target,
-				GLES20.GL_TEXTURE_MAG_FILTER,
+				GLES30.GL_TEXTURE_MAG_FILTER,
 				mag);
-		GLES20.glTexParameteri(
+		GLES30.glTexParameteri(
 				target,
-				GLES20.GL_TEXTURE_WRAP_S,
+				GLES30.GL_TEXTURE_WRAP_S,
 				wrapS);
-		GLES20.glTexParameteri(
+		GLES30.glTexParameteri(
 				target,
-				GLES20.GL_TEXTURE_WRAP_T,
+				GLES30.GL_TEXTURE_WRAP_T,
 				wrapT);
 	}
 
@@ -139,11 +139,11 @@ public class TextureParameters {
 		String message = null;
 		try {
 			GLUtils.texImage2D(
-					GLES20.GL_TEXTURE_2D,
+					GLES30.GL_TEXTURE_2D,
 					0,
-					GLES20.GL_RGBA,
+					GLES30.GL_RGBA,
 					flippedBitmap,
-					GLES20.GL_UNSIGNED_BYTE,
+					GLES30.GL_UNSIGNED_BYTE,
 					0);
 		} catch (IllegalArgumentException e) {
 			// Format/color space is invalid.
@@ -193,31 +193,31 @@ public class TextureParameters {
 	private static int shortcutToMin(String shortcut) {
 		switch (shortcut) {
 			case "n":
-				return GLES20.GL_NEAREST;
+				return GLES30.GL_NEAREST;
 			case "l":
-				return GLES20.GL_LINEAR;
+				return GLES30.GL_LINEAR;
 			case "nn":
-				return GLES20.GL_NEAREST_MIPMAP_NEAREST;
+				return GLES30.GL_NEAREST_MIPMAP_NEAREST;
 			case "ln":
-				return GLES20.GL_LINEAR_MIPMAP_NEAREST;
+				return GLES30.GL_LINEAR_MIPMAP_NEAREST;
 			case "ll":
-				return GLES20.GL_LINEAR_MIPMAP_LINEAR;
+				return GLES30.GL_LINEAR_MIPMAP_LINEAR;
 			default:
-				return GLES20.GL_NEAREST_MIPMAP_LINEAR;
+				return GLES30.GL_NEAREST_MIPMAP_LINEAR;
 		}
 	}
 
 	private static String minToShortcut(int min) {
 		switch (min) {
-			case GLES20.GL_NEAREST:
+			case GLES30.GL_NEAREST:
 				return "n";
-			case GLES20.GL_LINEAR:
+			case GLES30.GL_LINEAR:
 				return "l";
-			case GLES20.GL_NEAREST_MIPMAP_NEAREST:
+			case GLES30.GL_NEAREST_MIPMAP_NEAREST:
 				return "nn";
-			case GLES20.GL_LINEAR_MIPMAP_NEAREST:
+			case GLES30.GL_LINEAR_MIPMAP_NEAREST:
 				return "ln";
-			case GLES20.GL_LINEAR_MIPMAP_LINEAR:
+			case GLES30.GL_LINEAR_MIPMAP_LINEAR:
 				return "ll";
 			default:
 				return "nl";
@@ -226,32 +226,32 @@ public class TextureParameters {
 
 	private static int shortcutToMag(String shortcut) {
 		if (shortcut.equals("n")) {
-			return GLES20.GL_NEAREST;
+			return GLES30.GL_NEAREST;
 		} else {
-			return GLES20.GL_LINEAR;
+			return GLES30.GL_LINEAR;
 		}
 	}
 
 	private static String magToShortcut(int mag) {
-		return mag == GLES20.GL_NEAREST ? "n" : "l";
+		return mag == GLES30.GL_NEAREST ? "n" : "l";
 	}
 
 	private static int shortcutToWrap(String shortcut) {
 		switch (shortcut) {
 			case "c":
-				return GLES20.GL_CLAMP_TO_EDGE;
+				return GLES30.GL_CLAMP_TO_EDGE;
 			case "m":
-				return GLES20.GL_MIRRORED_REPEAT;
+				return GLES30.GL_MIRRORED_REPEAT;
 			default:
-				return GLES20.GL_REPEAT;
+				return GLES30.GL_REPEAT;
 		}
 	}
 
 	private static String wrapToShortcut(int wrap) {
 		switch (wrap) {
-			case GLES20.GL_CLAMP_TO_EDGE:
+			case GLES30.GL_CLAMP_TO_EDGE:
 				return "c";
-			case GLES20.GL_MIRRORED_REPEAT:
+			case GLES30.GL_MIRRORED_REPEAT:
 				return "m";
 			default:
 				return "r";

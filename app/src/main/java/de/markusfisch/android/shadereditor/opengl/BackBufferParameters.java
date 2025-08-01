@@ -5,7 +5,7 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Shader;
-import android.opengl.GLES20;
+import android.opengl.GLES30;
 
 import androidx.annotation.NonNull;
 
@@ -17,10 +17,10 @@ public class BackBufferParameters extends TextureParameters {
 	private String preset;
 
 	public BackBufferParameters() {
-		super(GLES20.GL_NEAREST,
-				GLES20.GL_NEAREST,
-				GLES20.GL_CLAMP_TO_EDGE,
-				GLES20.GL_CLAMP_TO_EDGE);
+		super(GLES30.GL_NEAREST,
+				GLES30.GL_NEAREST,
+				GLES30.GL_CLAMP_TO_EDGE,
+				GLES30.GL_CLAMP_TO_EDGE);
 	}
 
 	public void setPreset(String preset) {
@@ -41,10 +41,10 @@ public class BackBufferParameters extends TextureParameters {
 	}
 
 	void reset() {
-		set(GLES20.GL_NEAREST,
-				GLES20.GL_NEAREST,
-				GLES20.GL_CLAMP_TO_EDGE,
-				GLES20.GL_CLAMP_TO_EDGE);
+		set(GLES30.GL_NEAREST,
+				GLES30.GL_NEAREST,
+				GLES30.GL_CLAMP_TO_EDGE,
+				GLES30.GL_CLAMP_TO_EDGE);
 		preset = null;
 	}
 

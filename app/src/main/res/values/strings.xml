@@ -1,5 +1,5 @@
 <resources>
-	<string name="app_name">Shader Editor</string>
+	<string name="app_name">Shader Nerd Editor</string>
 	<string name="cannot_open_database">Cannot open database!</string>
 
 	<!-- MainActivity -->

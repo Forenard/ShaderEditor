@@ -3,11 +3,12 @@ plugins {
 }
 
 android {
-	namespace = "de.markusfisch.android.shadereditor"
+	namespace = "de.markusfisch.android.shadernerdeditor"
 
 	compileSdk = 34
 
 	defaultConfig {
+		applicationId = "de.markusfisch.android.shadernerdeditor"
 		minSdk = 21
 		targetSdk = compileSdk
 

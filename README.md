@@ -44,6 +44,7 @@ send some Bitcoin decimals to `bc1q2guk2rpll587aymrfadkdtpq32448x5khk5j8z`.
 * Previously rendered frame in backbuffer texture
 * Import and use arbitrary textures
 * Create and use cube maps
+* OpenGL ES 3.0 support with backward compatibility to 2.0
 * Disables rendering when the battery is low
 
 See [FAQ.md](FAQ.md) for frequently asked questions.

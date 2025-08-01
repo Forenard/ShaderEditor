@@ -1,0 +1,27 @@
+package de.markusfisch.android.shadernerdeditor.activity;
+
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import de.markusfisch.android.shadernerdeditor.R;
+
+public abstract class AbstractContentActivity
+		extends AbstractSubsequentActivity {
+	@Override
+	protected void onCreate(Bundle state) {
+		super.onCreate(state);
+		setContentView(R.layout.activity_subsequent);
+
+		initSystemBars(this);
+		initToolbar(this);
+
+		if (state == null) {
+			AbstractSubsequentActivity.setFragment(
+					getSupportFragmentManager(),
+					defaultFragment());
+		}
+	}
+
+	protected abstract Fragment defaultFragment();
+}
