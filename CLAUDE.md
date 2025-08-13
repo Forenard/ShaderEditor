@@ -9,6 +9,7 @@
 - `./gradlew assembleRelease` - リリースAPKをビルド（最初にlintを実行）
 - `./gradlew bundleRelease` - リリースバンドルを作成（最初にlintを実行）
 - `./gradlew clean` - ビルドアーティファクトをクリーン
+- `./gradlew installDebug` - 実機にデバッグAPKをインストール
 
 ### 品質保証
 - `./gradlew lintDebug` - Android lintチェックを実行
@@ -20,6 +21,16 @@
 - `make start` - 接続されたデバイスでアプリを起動
 - `make all` - ビルド、インストール、起動（デフォルトターゲット）
 - `make uninstall` - デバイスからデバッグバージョンを削除
+
+### 実機テスト
+- `adb devices` - 接続されたデバイス一覧を表示
+- `adb logcat` - アプリケーションログを表示
+- `adb logcat -c` - ログキャットバッファをクリア
+- `adb logcat -s MainActivity` - MainActivityのログを表示
+- `adb logcat -c && adb logcat | grep "ShaderEditor"` - アプリ固有のログを表示
+- `adb shell dumpsys meminfo de.markusfisch.android.shadereditor` - アプリのメモリ使用状況を表示
+- `adb shell am force-stop de.markusfisch.android.shadereditor` - アプリを強制終了
+- `adb shell am start -n de.markusfisch.android.shadernerdeditor.debug/de.markusfisch.android.shadernerdeditor.activity.SplashActivity` - アプリを起動
 
 ### ユーティリティコマンド
 - `make meminfo` - 実行中アプリのメモリ使用量を表示
